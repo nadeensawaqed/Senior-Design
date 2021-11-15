@@ -1,4 +1,4 @@
-# THE AFRL Team 1's Navigational Solution
+# THE AFRL Team 1's GITHUB!
 
 ## What is this repository?
 This is where we're going to develop a navigational network to work with april tags in the future!
@@ -12,4 +12,4 @@ CU Denver's 2021 Senior Design Students, sponsored by The Air Force Research Lab
 - Luke Schwab
 
 ## Yeah
-yeah
+yeah you already know
