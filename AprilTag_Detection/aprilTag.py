@@ -2,6 +2,8 @@
 import cv2
 import apriltag
 
+# https://www.pyimagesearch.com/2020/11/02/apriltag-with-python/
+
 vid = cv2.VideoCapture(0)
 
 while(True):
