@@ -1,0 +1,56 @@
+class ArUcoDetect:
+    def __init__(self, video_source=0):
+        self.cap = cv2.VideoCapture(video_source, cv2.CAP_DSHOW)
+        self.cap.set(3, 1280)
+        self.cap.set(4, 1280)
+        if not self.cap.isOpened():
+            raise ValueError("Unable to open video source", video_source)
+        self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+        self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    def navigation_test(self):
+        pass
+    def camera_feed(self):
+        arucoDict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_APRILTAG_36h11)
+        arucoParams = cv2.aruco.DetectorParameters_create()
+        
+        
+        if self.cap.isOpened(): ### confirm camera available
+            ret, frame = self.cap.read() ### begin video 
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) ### convert to grayscale
+            (corners, ids, rejected) = cv2.aruco.detectMarkers(gray, arucoDict, parameters=arucoParams,
+                                                               cameraMatrix=matrix_coefficients, 
+                                                               distCoeff=distortion_coefficients) ### find parameters in grayscale
+            
+            x,y,w,h = 0, 0, 300, 50
+            cv2.rectangle(frame, (x + 20, y + 20), (x + w, y + h), (0,255,255), -1) ### bounding rectangle for superimposed id list
+            cv2.rectangle(frame, (960, 20), (1260, 200), (255,255,255), 1)
+            #print(frame.shape)
+            if np.all(ids is not None):
+                
+                for i in range(0, len(ids)):
+                    rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners[i], 0.02, matrix_coefficients, distortion_coefficients)
+                    print(markerPoints)
+                    (rvec - tvec).any()
+                    
+                    cv2.aruco.drawDetectedMarkers(frame, corners) ### simple outline method
+                    cv2.aruco.drawAxis(frame, matrix_coefficients, distortion_coefficients, rvec, tvec, 0.01) ### draw pose axis
+                    
+                    
+                    ### put the list of found markers in the bounding rectangle defined above
+                    string_ids = ', '.join([str(i) for i in ids])
+                    cv2.putText(frame, 'Marker IDs Found: {}'.format(string_ids), (x+30, y+40), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1)
+
+                    ### draw navigational arrow
+                    cv2.arrowedLine(frame, (x+200, y+200), (x+400, y+400), (0, 255, 0), 9)
+                    
+            if ret: ### the boolean flag returned by read() --> if true, return the processed frame --> else return none
+                return (ret, cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+                
+            else:
+                return (ret, None)
+        else:
+            return (ret, None)
+                    
+        def __del__(self):
+            if self.cap.isOpened():
+                self.cap.release()
