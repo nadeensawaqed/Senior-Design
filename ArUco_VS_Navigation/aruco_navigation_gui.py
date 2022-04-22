@@ -33,7 +33,7 @@ class CreatorInfo:
     
 class NavigationInterface:
     
-    def __init__(self, ui, ui_title, video_source = 1):
+    def __init__(self, ui, ui_title, video_source = 0):
 
         ### user interface (main window where everything lives) parameters
         self.ui = ui
@@ -253,7 +253,8 @@ class NavigationInterface:
 class ArUcoDetect:
     def __init__(self, video_source):
         
-        self.cap = cv2.VideoCapture(video_source, cv2.CAP_DSHOW)
+        #self.cap = cv2.VideoCapture(video_source, cv2.CAP_DSHOW)
+        self.cap = cv2.VideoCapture(video_source)
         #self.cap.set(3, 1280)
         #self.cap.set(4, 1280)
         if not self.cap.isOpened():
